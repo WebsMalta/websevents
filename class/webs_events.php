@@ -2,7 +2,15 @@
 
 class Webs_Events {
 	
-	
+	/**
+	 * Webs_Events singleton instance
+	 * 
+	 * (default value: null)
+	 * 
+	 * @var Webs_Events instance
+	 * @access private
+	 * @static
+	 */
 	private static $instance = null;
 	
 	
@@ -13,16 +21,15 @@ class Webs_Events {
 	 * @static
 	 * @return void
 	 */
-	public static function get_instance()
-	{
+	public static function get_instance() {
+		
+		return self::$instance;
 		
 		if ( self::$instance == null ) {
 			self::$instance = new self;
 		}
-		
-		return self::$instance;
 	}
-
+	
 
 	/**
 	 * Generates a new instance of the plugin Manager
@@ -33,8 +40,10 @@ class Webs_Events {
 	private function __construct ()
 	{
 		$this->register_events_post_type ();
+		$this->register_scripts();
+		$this->register_styles();
+		$this->register_meta_boxes();
 	}
-
 
 	/**
 	 * Register the Events custom post type.
@@ -50,8 +59,8 @@ class Webs_Events {
 			function webs_events_registrar() {
 			
 				$labels = array(
-					'name'                => _x( 'Events', 'Post Type General Name', 'webs_events' ),
-					'singular_name'       => _x( 'Event', 'Post Type Singular Name', 'webs_events' ),
+					'name'                => _x( 'Events', 'Events General Name', 'webs_events' ),
+					'singular_name'       => _x( 'Event', 'Events Singular Name', 'webs_events' ),
 					'menu_name'           => __( 'Events', 'webs_events' ),
 					'all_items'           => __( 'All Events', 'webs_events' ),
 					'view_item'           => __( 'View Event', 'webs_events' ),
@@ -64,7 +73,7 @@ class Webs_Events {
 					'not_found_in_trash'  => __( 'Event not found in Trash', 'webs_events' ),
 				);
 				$rewrite = array(
-					'slug'                => 'event',
+					'slug'                => 'events',
 					'with_front'          => true,
 					'pages'               => true,
 					'feeds'               => true,
@@ -81,7 +90,7 @@ class Webs_Events {
 					'show_in_menu'        => true,
 					'show_in_nav_menus'   => true,
 					'show_in_admin_bar'   => true,
-					'menu_position'       => 10,
+					'menu_position'       => 5,
 					'can_export'          => true,
 					'has_archive'         => true,
 					'exclude_from_search' => false,
@@ -98,4 +107,61 @@ class Webs_Events {
 		}
 	}
 	
+	/**
+	 * Register the scripts required by the plugin.
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	private function register_scripts ()
+	{
+		
+		function gmaps_register ()
+		{
+			// Google Maps Javascript API v3
+			wp_enqueue_script( 'google_maps_places_v3', '//maps.googleapis.com/maps/api/js?libraries=places', false, '3' );
+			wp_enqueue_script( 'webs_events_scripts', '/wp-content/plugins/webs-events/js/app.js', false, '1' );
+		}
+		add_action( 'admin_enqueue_scripts', 'gmaps_register' );
+	}
+	
+	/**
+	 * Register the styles required by the plugin.
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	private function register_styles ()
+	{
+		wp_enqueue_style( 'webs_events_styles', WEBS_EVENTS_PLUGIN_URL . '/css/app.css' );
+	}
+	
+	/**
+	 * register_meta_boxes function.
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	private function register_meta_boxes ()
+	{
+		
+		add_action( 'add_meta_boxes', 'meta_boxes' );
+		
+		function meta_boxes ()
+		{
+			add_meta_box( 'webs_events_location_meta_box', __( 'Event location', 'webs_events' ), 'meta_callback', 'webs_event' );
+			
+			function meta_callback()
+			{
+				?>
+				<input id="pac-input" class="controls" type="text" placeholder="<?php _e( 'Enter the event venue', 'webs_events' ); ?>">
+				<input id="we_location_id" type="hidden" >
+				<input id="we_location_position" type="hidden" >
+				<input id="we_location_name" type="hidden" >
+				<input id="we_location_address" type="hidden" >
+				<div id="map-canvas"></div>
+				<?php;
+			}
+		}
+	}
 }
