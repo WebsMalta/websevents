@@ -21,13 +21,12 @@ class Webs_Events {
 	 * @static
 	 * @return void
 	 */
-	public static function get_instance() {
-		
-		return self::$instance;
-		
+	public static function get_instance()
+	{	
 		if ( self::$instance == null ) {
 			self::$instance = new self;
 		}
+		return self::$instance;
 	}
 	
 
@@ -110,28 +109,25 @@ class Webs_Events {
 	/**
 	 * Register the scripts required by the plugin.
 	 * 
-	 * @access private
+	 * @access public
+	 * @hook admin_enqueue_scripts
 	 * @return void
 	 */
-	private function register_scripts ()
-	{
-		
-		function gmaps_register ()
-		{
-			// Google Maps Javascript API v3
-			wp_enqueue_script( 'google_maps_places_v3', '//maps.googleapis.com/maps/api/js?libraries=places', false, '3' );
-			wp_enqueue_script( 'webs_events_scripts', '/wp-content/plugins/webs-events/js/app.js', false, '1' );
-		}
-		add_action( 'admin_enqueue_scripts', 'gmaps_register' );
+	public function register_scripts ()
+	{	
+		// Google Maps Javascript API v3
+		wp_enqueue_script( 'google_maps_places_v3', '//maps.googleapis.com/maps/api/js?libraries=places', false, '3' );
+		wp_enqueue_script( 'webs_events_scripts', '/wp-content/plugins/webs-events/js/app.js', false, '1' );
 	}
 	
 	/**
 	 * Register the styles required by the plugin.
 	 * 
-	 * @access private
+	 * @access public
+	 * @hook admin_enqueue_scripts
 	 * @return void
 	 */
-	private function register_styles ()
+	public function register_styles ()
 	{
 		wp_enqueue_style( 'webs_events_styles', WEBS_EVENTS_PLUGIN_URL . '/css/app.css' );
 	}
@@ -155,7 +151,7 @@ class Webs_Events {
 			{
 				?>
 				<input id="pac-input" class="controls" type="text" placeholder="<?php _e( 'Enter the event venue', 'webs_events' ); ?>">
-				<input id="we_location_id" type="hidden" >
+				<input id="we_location_id"  >
 				<input id="we_location_position" type="hidden" >
 				<input id="we_location_name" type="hidden" >
 				<input id="we_location_address" type="hidden" >

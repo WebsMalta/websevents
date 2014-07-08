@@ -50,14 +50,13 @@
 defined('ABSPATH') or die("No script kiddies please!");
 
 if (!defined('WEBS_EVENTS_PLUGIN_NAME'))
-    define('WEBS_EVENTS_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
+	define('WEBS_EVENTS_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
 
 if (!defined('WEBS_EVENTS_PLUGIN_DIR'))
-    define('WEBS_EVENTS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . WEBS_EVENTS_PLUGIN_NAME);
+	define('WEBS_EVENTS_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . WEBS_EVENTS_PLUGIN_NAME);
 
 if (!defined('WEBS_EVENTS_PLUGIN_URL'))
-    define('WEBS_EVENTS_PLUGIN_URL', WP_PLUGIN_URL . '/' . WEBS_EVENTS_PLUGIN_NAME);
-
+	define('WEBS_EVENTS_PLUGIN_URL', WP_PLUGIN_URL . '/' . WEBS_EVENTS_PLUGIN_NAME);
 
 /*
  * 2. REQUIRE DEPENDANCIES
@@ -65,8 +64,11 @@ if (!defined('WEBS_EVENTS_PLUGIN_URL'))
  *    class-wp-scss
  *    options.php - settings for plugin page
  */
-
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/webs_events.php'; // Events Manager
 
 
-$webs_events = Webs_Events::get_instance();
+/**
+ * 3. Register Scripts and Styles
+ */
+add_action( 'admin_enqueue_scripts', $webs_events->register_styles() );
+add_action( 'admin_enqueue_scripts', $webs_events->register_scripts() );

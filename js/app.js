@@ -3,12 +3,14 @@ https://developers.google.com/maps/documentation/javascript/places#place_details
 */
 
 function initialize() {
-
-	var we_position = document.getElementById('webs_events_location_position');
-	var we_name = document.getElementById('webs_events_location_name');
-	var we_address = document.getElementById('webs_events_location_address');
 	
-	// Initial setting 
+	// Inputs for hold and get the data from.
+	var we_id = document.getElementById('we_location_id');
+	var we_position = document.getElementById('we_location_position');
+	var we_name = document.getElementById('we_location_name');
+	var we_address = document.getElementById('we_location_address');
+	
+	// Initial map setting 
 	var mapOptions = {
 		center: new google.maps.LatLng(35.893066, 14.473535),
 		zoom: 13
@@ -79,10 +81,12 @@ function initialize() {
 			address = [(place.address_components[0] && place.address_components[0].short_name || ''), (place.address_components[1] && place.address_components[1].short_name || ''), (place.address_components[2] && place.address_components[2].short_name || '')].join(' ');
 		}
 		
-		console.debug(place);
+		// Save the data in the input elements.
+		we_id.value = place.id;
 		we_position.value = place.geometry.location;
 		we_name.value = place.name;
 		we_address.value = address;
+		console.debug(place);
 		
 		infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
 		infowindow.open(map, marker);
