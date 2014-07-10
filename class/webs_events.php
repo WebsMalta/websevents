@@ -39,8 +39,6 @@ class Webs_Events {
 	private function __construct ()
 	{
 		$this->register_events_post_type ();
-		$this->register_scripts();
-		$this->register_styles();
 		$this->register_meta_boxes();
 	}
 
@@ -117,7 +115,11 @@ class Webs_Events {
 	{	
 		// Google Maps Javascript API v3
 		wp_enqueue_script( 'google_maps_places_v3', '//maps.googleapis.com/maps/api/js?libraries=places', false, '3' );
-		wp_enqueue_script( 'webs_events_scripts', '/wp-content/plugins/webs-events/js/app.js', false, '1' );
+		wp_enqueue_script( 'webs_events_google_maps', WEBS_EVENTS_PLUGIN_URL . '/js/google_maps.js', array('google_maps_places_v3'), '1' );
+		wp_enqueue_script( 'webs_events_meta_boxes', WEBS_EVENTS_PLUGIN_URL . '/js/meta_boxes.js', false, '1' );
+		
+		wp_enqueue_script('media-upload');
+		wp_enqueue_script('thickbox');
 	}
 	
 	/**
@@ -145,19 +147,24 @@ class Webs_Events {
 		
 		function meta_boxes ()
 		{
-			add_meta_box( 'webs_events_location_meta_box', __( 'Event location', 'webs_events' ), 'meta_callback', 'webs_event' );
+			// Event locator meta box.
+			add_meta_box( 'we_locator_meta_box', __( 'Event location', 'webs_events' ), 'we_locator_meta_box_content', 'webs_event' );
 			
-			function meta_callback()
+			function we_locator_meta_box_content()
 			{
+				// Map container and inputs for holding location data details
 				?>
+				<div id="map-canvas"></div>
 				<input id="pac-input" class="controls" type="text" placeholder="<?php _e( 'Enter the event venue', 'webs_events' ); ?>">
-				<input id="we_location_id"  >
+				<input id="we_location_id" type="hidden" >
 				<input id="we_location_position" type="hidden" >
 				<input id="we_location_name" type="hidden" >
 				<input id="we_location_address" type="hidden" >
-				<div id="map-canvas"></div>
 				<?php;
 			}
+			
+			
+			add_meta_box( 'we_gallery_meta_box', __( 'Event Gallery', 'webs_events' ), 'WE_Meta_Box_Event_Gallery::output', 'webs_event', 'side' );
 		}
 	}
 }
