@@ -37,7 +37,7 @@ class WE_Meta_Box_Event_Gallery
 							echo '<li class="image" data-attachment_id="' . esc_attr( $attachment_id ) . '">
 								' . wp_get_attachment_image( $attachment_id, 'thumbnail' ) . '
 								<ul class="actions">
-									<li><a href="#" class="delete tips" data-tip="' . __( 'Delete image', 'woocommerce' ) . '">' . __( 'Delete', 'woocommerce' ) . '</a></li>
+									<li><div class="dashicons dashicons-trash"></div></li>
 								</ul>
 							</li>';
 						}
@@ -59,14 +59,23 @@ class WE_Meta_Box_Event_Gallery
 		</p>
 		
 		<?php
+		wp_nonce_field( 'we_save_gallery', 'we_gallery_nonce' );
 	}
 
 	/**
 	 * Save meta box data
 	 */
-	public static function save( $post_id ) {
-		$attachment_ids = array_filter( explode( ',', sanitize_text_field( $_POST['product_image_gallery'] ) ) );
+	public static function save( $post_id )
+	{
+		// Check the nonce
+		if ( empty( $_POST['we_gallery_nonce'] ) || ! wp_verify_nonce( $_POST['we_gallery_nonce'], 'we_save_gallery' ) ) {
+			return;
+		}
+		
+		// Array of ids
+		$attachment_ids = array_filter( explode( ',', sanitize_text_field( $_POST['event_gallery'] ) ) );
 
-		update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+		// String to save it.
+		update_post_meta( $post_id, '_event_gallery', implode( ',', $attachment_ids ) );
 	}
 }
