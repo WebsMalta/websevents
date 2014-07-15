@@ -65,7 +65,10 @@ if (!defined('WEBS_EVENTS_PLUGIN_URL'))
  *    options.php - settings for plugin page
  */
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/webs_events.php'; // Events Manager
-include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Box_Event_Gallery.php'; // Meta Boxes
+include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Boxes.php'; // Meta Boxes
+include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Box_Event_Gallery.php';
+include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Box_Event_Locator.php';
+
 
 $webs_events = Webs_Events::get_instance();
 
