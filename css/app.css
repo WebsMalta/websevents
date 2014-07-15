@@ -2,29 +2,29 @@
  * GOOGLE MAPS
  */
 #map-canvas {
-	height: 100%;
-	min-height: 350px;
 	margin: 0px;
-	padding: 0px
+	padding: 0px;
+	min-height: 350px;
+	height: 100%;
 }
 .controls {
-	margin-top: 28px;
-	border: 1px solid transparent;
-	border-radius: 2px 0 0 2px;
-	box-sizing: border-box;
 	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-top: 28px;
 	height: 32px;
 	outline: none;
+	border: 1px solid transparent;
+	border-radius: 2px 0 0 2px;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 #pac-input {
-	background-color: #fff;
 	padding: 0 11px 0 13px;
 	width: 75%;
-	font-family: Roboto;
-	font-size: 15px;
-	font-weight: 300;
+	background-color: #fff;
 	text-overflow: ellipsis;
+	font-weight: 300;
+	font-size: 15px;
+	font-family: Roboto;
 }
 #pac-input:focus {
 	border-color: #4d90fe;
@@ -39,27 +39,42 @@
  */
 #event_gallery_container ul.event_gallery:after,
 #event_gallery_container ul.event_gallery:before {
-	content: " ";
 	display: table;
+	content: " ";
 }
 #event_gallery_container ul.event_gallery:after {
 	clear: both;
 }
 #event_gallery_container ul.event_gallery li.image {
-	width: 115px;
-	float: left;
-	margin: 9px 9px 0 0;
 	position: relative;
+	float: left;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	margin: 9px 9px 0 0;
 	min-height: 85px;
+	width: 115px;
 }
 #event_gallery_container ul.event_gallery li.image img {
 	max-width: 100%;
 	height: auto;
 	border: 1px solid #d5d5d5;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	border-radius: 2px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+#event_gallery_container ul.event_gallery li.image ul.actions {
+	visibility: hidden;
+	margin-top: -35px;
+	padding-top: 15px;
+	text-align: center;
+	text-shadow: -1px 2px 2px white;
+	opacity: 0;
+	transition: .2s all ease-in-out;
+}
+#event_gallery_container ul.event_gallery li.image:hover ul.actions {
+	visibility: visible;
+	opacity: 1;
+}
+#event_gallery_container ul.event_gallery li.image ul.actions .dashicons {
 }

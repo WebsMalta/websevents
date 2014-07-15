@@ -45,7 +45,7 @@ jQuery(document).ready(function( $ ) {
 						<li class="image" data-attachment_id="' + attachment.id + '">\
 							<img src="' + attachment.url + '" />\
 							<ul class="actions">\
-								<li><a href="#" class="delete" title="' + $(this).data('delete') + '">' + $(this).data('text') + '</a></li>\
+								<li><div class="dashicons dashicons-trash"></div></li>\
 							</ul>\
 						</li>');
 				}
