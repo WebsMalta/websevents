@@ -22,7 +22,7 @@ class Webs_Events {
 	 * @return void
 	 */
 	public static function get_instance()
-	{	
+	{
 		if ( self::$instance == null ) {
 			self::$instance = new self;
 		}
@@ -39,7 +39,8 @@ class Webs_Events {
 	private function __construct ()
 	{
 		$this->register_events_post_type ();
-		$this->register_meta_boxes();
+		
+		$we_meta_boxes = new WE_Meta_Boxes();
 	}
 
 	/**
@@ -135,37 +136,44 @@ class Webs_Events {
 		wp_enqueue_style( 'webs_events_styles', WEBS_EVENTS_PLUGIN_URL . '/css/app.css' );
 	}
 	
+	
 	/**
-	 * register_meta_boxes function.
-	 * 
-	 * @access private
-	 * @return void
+	 * Check if we're saving, the trigger an action based on the post type
+	 *
+	 * @param  int $post_id
+	 * @param  object $post
 	 */
-	private function register_meta_boxes ()
-	{
-		
-		add_action( 'add_meta_boxes', 'meta_boxes' );
-		
-		function meta_boxes ()
-		{
-			// Event locator meta box.
-			add_meta_box( 'we_locator_meta_box', __( 'Event location', 'webs_events' ), 'we_locator_meta_box_content', 'webs_event' );
-			
-			function we_locator_meta_box_content()
-			{
-				// Map container and inputs for holding location data details
-				?>
-				<div id="map-canvas"></div>
-				<input id="pac-input" class="controls" type="text" placeholder="<?php _e( 'Enter the event venue', 'webs_events' ); ?>">
-				<input id="we_location_id" type="hidden" >
-				<input id="we_location_position" type="hidden" >
-				<input id="we_location_name" type="hidden" >
-				<input id="we_location_address" type="hidden" >
-				<?php;
-			}
-			
-			
-			add_meta_box( 'we_gallery_meta_box', __( 'Event Gallery', 'webs_events' ), 'WE_Meta_Box_Event_Gallery::output', 'webs_event', 'side' );
+	public function save_meta_boxes( $post_id, $post ) {
+		// $post_id and $post are required
+		if ( empty( $post_id ) || empty( $post ) ) {
+			return;
 		}
+
+		// Dont' save meta boxes for revisions or autosaves
+		if ( defined( 'DOING_AUTOSAVE' ) || is_int( wp_is_post_revision( $post ) ) || is_int( wp_is_post_autosave( $post ) ) ) {
+			return;
+		}
+		
+		// Check the nonce
+		if ( empty( $_POST['woocommerce_meta_nonce'] ) || ! wp_verify_nonce( $_POST['woocommerce_meta_nonce'], 'woocommerce_save_data' ) ) {
+			return;
+		} 
+
+		// Check the post being saved == the $post_id to prevent triggering this call for other save_post events
+		if ( empty( $_POST['post_ID'] ) || $_POST['post_ID'] != $post_id ) {
+			return;
+		}
+
+		// Check user has permission to edit
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+			return;
+		}
+
+		// Check the post type
+		if ( ! in_array( $post->post_type, array( 'product', 'shop_order', 'shop_coupon' ) ) ) {
+			return;
+		}
+
+		do_action( 'woocommerce_process_' . $post->post_type . '_meta', $post_id, $post );
 	}
 }

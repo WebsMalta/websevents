@@ -42,7 +42,7 @@ class WE_Meta_Box_Event_Gallery
 							</li>';
 						}
 					} else {
-						echo '<li class=\"no-images\"><h4>'. __('There is no images on this event', 'webs_events') .'</h4></li>';
+						echo '<li class=\"no-images\"><h4>'. __('There aren\'t images on this event', 'webs_events') .'</h4></li>';
 					}
 				?>
 			</ul>
@@ -64,8 +64,8 @@ class WE_Meta_Box_Event_Gallery
 	/**
 	 * Save meta box data
 	 */
-	public static function save( $post_id, $post ) {
-		$attachment_ids = array_filter( explode( ',', wc_clean( $_POST['product_image_gallery'] ) ) );
+	public static function save( $post_id ) {
+		$attachment_ids = array_filter( explode( ',', sanitize_text_field( $_POST['product_image_gallery'] ) ) );
 
 		update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
 	}
