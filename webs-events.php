@@ -4,7 +4,7 @@
  * Plugin Name: Webs Events
  * Plugin URI: http://webs.com.mt
  * Description: Save and show events on the site. Simple yet powerful event management system.
- * Version: 0.1
+ * Version: 0.5
  * Author: Webs.com.mt
  * Author URI: http://webs.com.mt
  * License: GPL2
@@ -58,12 +58,21 @@ if (!defined('WEBS_EVENTS_PLUGIN_DIR'))
 if (!defined('WEBS_EVENTS_PLUGIN_URL'))
 	define('WEBS_EVENTS_PLUGIN_URL', WP_PLUGIN_URL . '/' . WEBS_EVENTS_PLUGIN_NAME);
 
+if (!defined('WEBS_EVENTS_TEMPLATES_DIR'))
+	define('WEBS_EVENTS_TEMPLATES_DIR', WEBS_EVENTS_PLUGIN_DIR . '/templates');
+
+
 /*
  * 2. REQUIRE DEPENDANCIES
  *
- *    class-wp-scss
- *    options.php - settings for plugin page
+ *    Core functions
+ *    Template functions
+ *    Meta Boxes
  */
+
+include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_core_functions.php';
+include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_template_functions.php';
+
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/webs_events.php'; // Events Manager
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Boxes.php'; // Meta Boxes
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/WE_Meta_Box_Event_Gallery.php';
@@ -76,5 +85,5 @@ $webs_events = Webs_Events::get_instance();
 /**
  * 3. REGISTER SCRIPTS
  */
-add_action( 'admin_enqueue_scripts', $webs_events->register_styles() );
-add_action( 'admin_enqueue_scripts', $webs_events->register_scripts() );
+add_action( 'admin_enqueue_scripts', array($webs_events, 'register_styles' ));
+add_action( 'admin_enqueue_scripts', array($webs_events, 'register_scripts' ));
