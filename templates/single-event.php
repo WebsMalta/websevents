@@ -4,7 +4,7 @@
  *
  * Override this template by copying it to yourtheme/webs-events/single-event.php
  *
- * @author 		Gabriel Gil
+ * @author 	    Gabriel Gil
  * @package 	Webs Events/Templates
  * @version     1
  */
