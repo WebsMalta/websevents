@@ -23,7 +23,7 @@ class WE_Meta_Box_Event_Gallery
 	public static function output( $post )
 	{
 		?>
-		<!--  Galley itself -->
+		<!--  Gallery itself -->
 		<div id="event_gallery_container">
 			<ul class="event_gallery">
 				<?php
@@ -37,7 +37,7 @@ class WE_Meta_Box_Event_Gallery
 							echo '<li class="image" data-attachment_id="' . esc_attr( $attachment_id ) . '">
 								' . wp_get_attachment_image( $attachment_id, 'thumbnail' ) . '
 								<ul class="actions">
-									<li><div class="dashicons dashicons-trash"></div></li>
+									<li><div class="dashicons dashicons-trash delete"></div></li>
 								</ul>
 							</li>';
 						}

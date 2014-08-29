@@ -38,7 +38,9 @@ class Webs_Events {
 	 */
 	private function __construct ()
 	{
-		$this->register_events_post_type ();
+		$this->register_events_post_type();
+		$this->register_events_taxonomies();
+		$this->load_events_templates();
 		
 		$we_meta_boxes = new WE_Meta_Boxes();
 	}
@@ -81,7 +83,7 @@ class Webs_Events {
 					'description'         => __( 'Events for being displayed on the site', 'webs_events' ),
 					'labels'              => $labels,
 					'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'custom-fields' ),
-					'taxonomies'          => array( 'category' ),
+					//'taxonomies'          => array( 'webs_events_category' ),
 					'hierarchical'        => false,
 					'public'              => true,
 					'show_ui'             => true,
@@ -107,17 +109,80 @@ class Webs_Events {
 	}
 	
 	/**
-	 * Register the scripts required by the plugin.
+	 * Register the Events taxonomies
+	 * 
+	 * @access private
+	 * @return void
+	 */
+	private function register_events_taxonomies ()
+	{
+		function webs_events_category_registrar ()
+		{
+			$args = array(
+				'hierarchical' => true,
+			);
+			register_taxonomy( 'webs_events_category', 'webs_event', $args );
+		}
+		add_action( 'init', 'webs_events_category_registrar' );
+	}
+	
+	private function load_events_templates ()
+	{
+		// Single event template
+		function webs_events_single_template ( $single )
+		{
+			global $wp_query, $post;
+			/* Checks for single template by post type */
+			if ( $post->post_type == "webs_event" )
+			{
+				if( file_exists(get_template_directory(). '/webs-events/single-event.php') )
+				{
+					return get_template_directory(). '/webs-events/single-event.php';
+				}
+				elseif ( file_exists(WEBS_EVENTS_TEMPLATES_DIR. '/single-event.php') )
+				{
+					return WEBS_EVENTS_TEMPLATES_DIR . '/single-event.php';
+				}
+			}
+			return $single;
+		}
+		add_filter('single_template', 'webs_events_single_template');
+		
+		
+		// Archvive events template
+		function webs_events_archive_template ( $archive )
+		{
+			global $wp_query, $post;
+			/* Checks for single template by post type */
+			if ( $post->post_type == "webs_event" )
+			{
+				if( file_exists(get_template_directory(). '/webs-events/archive-events.php') )
+				{
+					return get_template_directory(). '/webs-events/archive-events.php';
+				}
+				elseif ( file_exists(WEBS_EVENTS_TEMPLATES_DIR. '/archive-events.php') )
+				{
+					return WEBS_EVENTS_TEMPLATES_DIR . '/archive-events.php';
+				}
+			}
+			return $archive;
+		}
+		add_filter('archive_template', 'webs_events_archive_template');
+	}
+	
+	/**
+	 * Enqueue the scripts required at the admin area by the plugin.
 	 * 
 	 * @access public
 	 * @hook admin_enqueue_scripts
 	 * @return void
 	 */
-	public function register_scripts ()
+	public function enqueue_admin_scripts ()
 	{	
 		// Google Maps Javascript API v3
 		wp_enqueue_script( 'google_maps_places_v3', '//maps.googleapis.com/maps/api/js?libraries=places', false, '3' );
 		wp_enqueue_script( 'webs_events_google_maps', WEBS_EVENTS_PLUGIN_URL . '/js/google_maps.js', array('google_maps_places_v3'), '1' );
+		// Meta boxes
 		wp_enqueue_script( 'webs_events_meta_boxes', WEBS_EVENTS_PLUGIN_URL . '/js/meta_boxes.js', false, '1' );
 		
 		wp_enqueue_script('media-upload');
@@ -125,17 +190,41 @@ class Webs_Events {
 	}
 	
 	/**
-	 * Register the styles required by the plugin.
+	 * Enqueue the scripts required by the plugin.
+	 * 
+	 * @access public
+	 * @hook wp_enqueue_scripts
+	 * @return void
+	 */
+	public function enqueue_scripts ()
+	{
+		// Light Gallery
+		wp_enqueue_script( 'sachinchoolur-lightgallery-js', WEBS_EVENTS_PLUGIN_URL . '/vendor/lightGallery/js/lightGallery.min.js', 'jquery', '1.1.2' );
+	}
+	
+	/**
+	 * Enqueue the styles required by the plugin in the admin area.
 	 * 
 	 * @access public
 	 * @hook admin_enqueue_scripts
 	 * @return void
 	 */
-	public function register_styles ()
+	public function enqueue_admin_styles ()
 	{
 		wp_enqueue_style( 'webs_events_styles', WEBS_EVENTS_PLUGIN_URL . '/css/app.css' );
 	}
 	
+	/**
+	 * Enqueue the styles required by the plugin.
+	 * 
+	 * @access public
+	 * @hook wp_enqueue_scripts
+	 * @return void
+	 */
+	public function enqueue_styles ()
+	{
+		wp_enqueue_style( 'sachinchoolur-lightGallery-css', WEBS_EVENTS_PLUGIN_URL . '/vendor/lightGallery/css/lightGallery.css', false, '1.1.2' );
+	}
 	
 	/**
 	 * Check if we're saving, the trigger an action based on the post type
@@ -143,7 +232,8 @@ class Webs_Events {
 	 * @param  int $post_id
 	 * @param  object $post
 	 */
-	public function save_meta_boxes( $post_id, $post ) {
+	public function save_meta_boxes( $post_id, $post )
+	{
 		// $post_id and $post are required
 		if ( empty( $post_id ) || empty( $post ) ) {
 			return;

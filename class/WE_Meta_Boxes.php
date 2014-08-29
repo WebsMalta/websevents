@@ -31,6 +31,8 @@ class WE_Meta_Boxes
 		// Now, each metabox
 		add_action( 'webs_process_event_meta', 'WE_Meta_Box_Event_Locator::save', 10, 2 );
 		add_action( 'webs_process_event_meta', 'WE_Meta_Box_Event_Gallery::save', 20, 2 );
+        
+       
 	}
 	
 	public function add_meta_boxes ()
@@ -40,6 +42,8 @@ class WE_Meta_Boxes
 		
 		// Event Gallery
 		add_meta_box( 'we_gallery_meta_box', __( 'Event Gallery', 'webs_events' ), array( 'WE_Meta_Box_Event_Gallery', 'output'), 'webs_event', 'normal' );
+
+
 	}
 	
 	public function save_meta_boxes ( $post_id, $post )

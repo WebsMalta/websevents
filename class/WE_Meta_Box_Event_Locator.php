@@ -38,7 +38,15 @@ class WE_Meta_Box_Event_Locator
 	 */
 	public static function save( $post_id )
 	{
-		//$attachment_ids = array_filter( explode( ',', sanitize_text_field( $_POST['product_image_gallery'] ) ) );
-		//update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
+		// Check the nonce
+		if ( empty( $_POST['we_location_nonce'] ) || ! wp_verify_nonce( $_POST['we_location_nonce'], 'we_save_location' ) ) {
+			return;
+		}
+		
+		// Serialized data
+		$attachment_ids = array_filter( explode( ',', sanitize_text_field( $_POST['event_location'] ) ) );
+
+		// I'm saving it!
+		update_post_meta( $post_id, '_event_gallery', implode( ',', $attachment_ids ) );
 	}
 }
