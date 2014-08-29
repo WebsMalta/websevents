@@ -66,11 +66,14 @@ if (!defined('WEBS_EVENTS_TEMPLATES_DIR'))
  * 2. REQUIRE DEPENDANCIES
  *
  *    Core functions
+ *    Template hooks
  *    Template functions
  *    Meta Boxes
  */
 
 include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_core_functions.php';
+include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_event_functions.php';
+include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_template_hooks.php';
 include_once WEBS_EVENTS_PLUGIN_DIR . '/includes/we_template_functions.php';
 
 include_once WEBS_EVENTS_PLUGIN_DIR . '/class/webs_events.php'; // Events Manager
@@ -83,7 +86,9 @@ $webs_events = Webs_Events::get_instance();
 
 
 /**
- * 3. REGISTER SCRIPTS
+ * 3. ENQUEUE SCRIPTS
  */
-add_action( 'admin_enqueue_scripts', array($webs_events, 'register_styles' ));
-add_action( 'admin_enqueue_scripts', array($webs_events, 'register_scripts' ));
+add_action( 'admin_enqueue_scripts', array($webs_events, 'enqueue_admin_scripts' ));
+add_action( 'admin_enqueue_scripts', array($webs_events, 'enqueue_admin_styles' ));
+add_action( 'wp_enqueue_scripts', array($webs_events, 'enqueue_scripts' ));
+add_action( 'wp_enqueue_scripts', array($webs_events, 'enqueue_styles' ));
