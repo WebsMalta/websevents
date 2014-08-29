@@ -52,12 +52,12 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	margin: 9px 9px 0 0;
-	min-height: 85px;
+	height: 115px;
 	width: 115px;
 }
 #event_gallery_container ul.event_gallery li.image img {
 	max-width: 100%;
-	height: auto;
+	height: 100%;
 	border: 1px solid #d5d5d5;
 	-webkit-border-radius: 50%;
 	-moz-border-radius: 50%;
@@ -66,7 +66,7 @@
 #event_gallery_container ul.event_gallery li.image ul.actions {
 	visibility: hidden;
 	margin-top: -35px;
-	padding-top: 15px;
+	padding-bottom: 15px;
 	text-align: center;
 	text-shadow: -1px 2px 2px white;
 	opacity: 0;

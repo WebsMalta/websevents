@@ -40,7 +40,7 @@ jQuery(document).ready(function( $ ) {
 				// Do something with attachment.id and/or attachment.url here
 				if ( attachment.id ) {
 					attachment_ids = attachment_ids ? attachment_ids + "," + attachment.id : attachment.id;
-
+					
 					$event_gallery_images.append('\
 						<li class="image" data-attachment_id="' + attachment.id + '">\
 							<img src="' + attachment.url + '" />\
@@ -59,6 +59,22 @@ jQuery(document).ready(function( $ ) {
 		
 		// Finally, open the modal
 		file_frame.open();
+	});
+	
+	// Remove images
+	$('#event_gallery_container').on( 'click', '.dashicons.delete', function() {
+		$(this).closest('li.image').remove();
+
+		var attachment_ids = '';
+
+		$('#event_gallery_container ul li.image').css('cursor','default').each(function() {
+			var attachment_id = jQuery(this).attr( 'data-attachment_id' );
+			attachment_ids = attachment_ids + attachment_id + ',';
+		});
+
+		$event_gallery_ids.val( attachment_ids );
+
+		return false;
 	});
 
 });
